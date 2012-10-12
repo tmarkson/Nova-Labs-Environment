@@ -4,7 +4,8 @@
 #include <Timer.h>
 
 //CONFIGURE
-byte server[] = { 206,220,173,113 }; //ip Address of the server you will connect to
+//byte server[] = { 66,228,42,147 }; // nova-labs.org
+byte server[] = { 208,77,101,242 }; // lumisense.com
 
 boolean doorSwitchValue = 0;
 int doorSwitchPin = 5;
@@ -24,6 +25,9 @@ void setup()
 
 	// Set door switch pin to an input
 	pinMode(doorSwitchPin, INPUT);
+
+	// Set the door switch to current value. Avoids sending the status on boot up
+	doorSwitchValue = digitalRead(doorSwitchPin);
 
 	// Start a timer to check door switch state
 	int timerID = t.every(500, checkSwitch);
@@ -70,7 +74,9 @@ void connectAndRead()
 		Serial.println("Connected.");
 		Serial.println("Sending status to server...");
 
-		String sendStr = "GET /~lumisens/nova-labs/status/SetStatus.php?author=arduino&switch="+doorSwitchValue+" HTTP/1.1";
+		String sendStr = "GET /~lumisens/nova-labs/status/SetStatus.php?author=arduino&switch=";
+		sendStr += doorSwitchValue;
+		sendStr += " HTTP/1.1";
 		client.println(sendStr);
 		client.println("Host: www.lumisense.com");
 		client.println("User-Agent: arduino-ethernet");

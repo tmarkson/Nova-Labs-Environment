@@ -1,6 +1,6 @@
 -- DROP TABLE IF EXISTS 'novalabsDoorEvents';
 
-CREATE TABLE IF NOT EXISTS `novalabsDoorEvents` (
+CREATE TABLE IF NOT EXISTS `novalabsEvents` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `timestamp`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `doorValue` boolean NOT NULL,
