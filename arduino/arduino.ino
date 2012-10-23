@@ -1,4 +1,15 @@
-//ARDUINO 1.0+ ONLY
+/*
+	Nova Labs Open/Close Door Switch
+
+	A physical switch at Nova Labs to show if the door is open or closed from the internet
+
+	Outputs: LED sign with two states (HIGH for open, LOW for closed)
+	Inputs: Single switch (HIGH for open, LOW for closed)
+	
+	http://10.100.10.61/tstat/
+
+	ARDUINO 1.0+ ONLY
+*/
 #include <Ethernet.h>
 #include <SPI.h>
 #include <Timer.h>
@@ -8,7 +19,9 @@
 byte server[] = { 208,77,101,242 }; // lumisense.com
 
 boolean doorSwitchValue = 0;
-int doorSwitchPin = 5;
+byte doorSwitchPin = 5;
+byte statusSignOpenPin = 2;
+byte statusSignClosedPin = 4;
 
 byte mac[] = {	0x90, 0xA2, 0xDA, 0x0D, 0x1C, 0x06 };	// novalabs shield
 
@@ -23,11 +36,16 @@ void setup()
 	// Print local IP address
 	Serial.println(Ethernet.localIP());
 
-	// Set door switch pin to an input
 	pinMode(doorSwitchPin, INPUT);
+	pinMode(statusSignClosedPin, OUTPUT);
+	pinMode(statusSignOpenPin, OUTPUT);
 
-	// Set the door switch to current value. Avoids sending the status on boot up
+	// Set the door switch variable to current value
+	// Avoids sending the status on boot up
 	doorSwitchValue = digitalRead(doorSwitchPin);
+
+	// Set the sign to current switch value
+	setSign(doorSwitchValue);
 
 	// Start a timer to check door switch state
 	int timerID = t.every(500, checkSwitch);
@@ -58,9 +76,28 @@ void checkSwitch()
 	{
 		Serial.print("Switch changed! Value is ");
 		Serial.println(newDoorSwitchValue);
+
 		// store new door switch value
 		doorSwitchValue = newDoorSwitchValue;
+
+		// change sign
+		setSign(doorSwitchValue);
+
+		// send data to web serv
 		connectAndRead();
+	}
+}
+void setSign(boolean value)
+{
+	if(value)
+	{
+		digitalWrite(statusSignOpenPin, 1);
+		digitalWrite(statusSignClosedPin, 0);
+	}
+	else
+	{
+		digitalWrite(statusSignOpenPin, 0);
+		digitalWrite(statusSignClosedPin, 1);
 	}
 }
 void connectAndRead()
