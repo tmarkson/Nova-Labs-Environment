@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Nova Labs Open/Closed Widget - Status Check</title>
+<title>Nova Labs Environment Widget - Status Display</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 </head>
 <body>
@@ -16,11 +16,17 @@
 
 	function showDoorStatus($config,$mdbHandle)
 	{
-		$query = "SELECT doorValue,timestamp FROM {$config['targetTable']} ORDER BY timestamp DESC LIMIT 1;";
-		$queryResult = $mdbHandle->queryAll($query);
+		$queryStatus = "SELECT doorValue,timestamp FROM {$config['tableDoorEvents']} ORDER BY timestamp DESC LIMIT 1;";
+		$queryStatusResult = $mdbHandle->queryAll($queryStatus);
 		$error = queryErrorCheckNoDie($mdbHandle); if($error != '') $errors[] = $error;
 
-		if($queryResult[0]['doorvalue'] == '1')
+		$queryClimate = "SELECT temp,timestamp FROM {$config['tableThermostatEvents']} ORDER BY timestamp DESC LIMIT 1;";
+		$queryClimateResult = $mdbHandle->queryAll($queryClimate);
+		$error = queryErrorCheckNoDie($mdbHandle); if($error != '') $errors[] = $error;
+		
+		$tempStr = $queryClimateResult[0]['temp'];
+
+		if($queryStatusResult[0]['doorvalue'] == '1')
 		{
 			echo "<span style='width: 60px; display: block; margin-left: auto; margin-right: auto;' class='btn btn-success btn-large'>OPEN</span>";
 		}
@@ -30,7 +36,7 @@
 			echo "<span style='width: 60px; display: block; margin-left: auto; margin-right: auto;' class='btn btn-danger btn-large'>CLOSED</span>";
 		}
 		echo "<br />";
-		echo "<p style='text-align:center;'>".date('M d \a\t H:i:s',strtotime($queryResult[0]['timestamp']))."</p>";
+		echo "<p style='text-align:center;'><strong>{$tempStr}&#176;F</strong> | ".date('M d \a\t H:i:s',strtotime($queryStatusResult[0]['timestamp']))."</p>";
 		return true;
 	}
 	

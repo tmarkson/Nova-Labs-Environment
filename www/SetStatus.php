@@ -39,7 +39,7 @@
 			date_default_timezone_set('America/New_York');
 			$timestamp = date('Y-m-d H:i:s', time());
 
-			$insertQuery = "INSERT INTO {$config['targetTable']} (doorValue,tempValue,author,timestamp) VALUES ({$_REQUEST['switch']},0.0,'{$authorStr}','{$timestamp}')";
+			$insertQuery = "INSERT INTO {$config['tableDoorEvents']} (doorValue,tempValue,author,timestamp) VALUES ({$_REQUEST['switch']},0.0,'{$authorStr}','{$timestamp}')";
 			$affected =& $mdb2->exec($insertQuery);
 			$error = queryErrorCheckNoDie($mdb2); if($error != '') $errors[] = $error;
 
