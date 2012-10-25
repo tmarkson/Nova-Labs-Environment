@@ -39,7 +39,7 @@
 			date_default_timezone_set('America/New_York');
 			$timestamp = date('Y-m-d H:i:s', time());
 
-			$insertQuery = "INSERT INTO {$config['tableDoorEvents']} (doorValue,tempValue,author,timestamp) VALUES ({$_REQUEST['switch']},0.0,'{$authorStr}','{$timestamp}')";
+			$insertQuery = "INSERT INTO {$config['tableDoorEvents']} (doorValue,author,timestamp) VALUES ({$_REQUEST['switch']},'{$authorStr}','{$timestamp}')";
 			$affected =& $mdb2->exec($insertQuery);
 			$error = queryErrorCheckNoDie($mdb2); if($error != '') $errors[] = $error;
 
@@ -49,8 +49,12 @@
 			{
 				$statusStr = 'The door to @nova_labs was '.($_REQUEST['switch']?'Opened':'Closed').' on '.date('M d \a\t H:i:s',(time()+0)).' by '.ucwords(strtolower($authorStr));
 				$connection->post('statuses/update', array('status' => $statusStr));
+				echo "Event logged and tweeted";
 			}
-			echo "Event logged and tweeted";
+			else
+			{
+				echo "Can't connect to Twitter?!?!!!!?!?";
+			}
 		} else {
 			echo "Status is not recognized.";
 		}
