@@ -27,7 +27,7 @@ function showStatus() {
 }
 
 	showStatus();
-    var refreshId = setInterval( "showStatus()", 2000);
+    var refreshId = setInterval( "showStatus()", 5000);
 
 
 </script>

@@ -6,7 +6,8 @@
 	$config['user'] = "";
 	$config['pass'] = "";
 	$config['database'] = "";
-	$config['targetTable'] = "";
+	$config['tableDoorEvents'] = "";
+	$config['tableThermostatEvents'] = "";
 
 	/*
 		Twitter OAuth variables for @nova_labs_door

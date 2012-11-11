@@ -14,8 +14,8 @@ buffer = cStringIO.StringIO()
 
 # Setup for curl command to request status from thermostat
 c = pycurl.Curl()
-c.setopt(pycurl.FOLLOWLOCATION,1)
-c.setopt(pycurl.VERBOSE, False)
+c.setopt(c.FOLLOWLOCATION,1)
+c.setopt(c.VERBOSE, False)
 url = 'http://10.100.10.61/tstat'
 c.setopt(c.URL,url)
 c.setopt(c.WRITEFUNCTION, buffer.write)
@@ -28,9 +28,6 @@ jsonStr = buffer.getvalue()
 # Converts string to dict
 jsonDict = json.loads(jsonStr)
 
-# Prints thermostat status for local reporting
-print jsonDict
-print
 
 # Parameters dict for variables being sent to web server
 params = {
@@ -50,6 +47,24 @@ for key in jsonDict:
 # Prepare to send the thermostat status to web server
 k = pycurl.Curl()
 url = 'http://lumisense.com/nova-labs/status/DoThermostat.php'
+k.setopt(k.VERBOSE, False)
 k.setopt(k.URL, (url + '?' + urllib.urlencode(params)))
 # Send status attributes to web server
 k.perform()
+
+# Prints thermostat status for local reporting
+printStr = "("
+
+# Reset counter
+i=1
+for key,val in (params.items()):
+	printStr += ("'%s'" % str(val))
+	if i == len(params):
+		printStr += (")")
+		break
+	else: printStr += (",")
+	i+=1
+
+# Print the value string
+print printStr
+print
