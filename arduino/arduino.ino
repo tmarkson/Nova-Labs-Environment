@@ -20,8 +20,8 @@ byte server[] = { 208,77,101,242 }; // lumisense.com
 
 boolean doorSwitchValue = 0;
 byte doorSwitchPin = 5;
-byte statusSignOpenPin = 2;
-byte statusSignClosedPin = 4;
+byte statusSignClosedPin = 2;
+byte statusSignOpenPin = 4;
 
 byte mac[] = {	0x90, 0xA2, 0xDA, 0x0D, 0x1C, 0x06 };	// novalabs shield
 
